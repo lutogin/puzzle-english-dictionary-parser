@@ -8,7 +8,7 @@ services:
       args:
         PORT: 3000
     ports:
-      - "80:3000"
+      - "3000:3000"
       - "9229:9229"
     volumes:
       - ./pe-parser:/app
