@@ -1,0 +1,16 @@
+version: "3.8"
+services:
+  pe-parser:
+    container_name: pe-parser
+    build:
+      context: ./pe-parser
+      dockerfile: Dockerfile
+      args:
+        PORT: 3000
+    ports:
+      - "80:3000"
+      - "9229:9229"
+    volumes:
+      - ./pe-parser:/app
+      - /app/node_modules
+      - /dist
