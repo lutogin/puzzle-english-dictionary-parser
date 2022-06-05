@@ -3,7 +3,6 @@ import { HttpService } from '@nestjs/axios';
 import { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { map } from 'rxjs';
 import { ConfigService } from '@nestjs/config';
-import * as querystring from 'querystring';
 
 enum ApiPath {
   GetDictionary = 'change-my-dictionary',
