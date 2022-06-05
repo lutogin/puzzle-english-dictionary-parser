@@ -32,8 +32,7 @@ export class PeParserService {
 
       const wordFromPage = DOM.getText(this.SELECTOR_WORDS).map(this.cleanText);
 
-      // if (wordFromPage.length) {
-      if (page < 4) {
+      if (wordFromPage.length) {
         page += 1;
       } else {
         hasMore = false;
