@@ -24,9 +24,9 @@ $ docker-compose up pe-parser
 
 ## Using
 
-Main endpoint for run parsing is `GET` to ```http://127.0.0.1/pe-parser```
+Main endpoint for run parsing is `GET` to ```http://127.0.0.1:3000/pe-parser```
 Also you can add additional params ```startPage``` and ```endPage``` if you need some special words to parse.
-Example ```http://127.0.0.1/pe-parser?startPage=4&endPage=5```
+Example ```http://127.0.0.1:3000/pe-parser?startPage=4&endPage=5```
 Default puzzle-english use order by date add to your vocabulary.
 
 After run script you see your words and translations into out directory inside the app.
