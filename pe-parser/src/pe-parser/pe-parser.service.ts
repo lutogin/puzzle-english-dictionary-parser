@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { PeClientService } from '../pe-client/pe-client.service';
 import { JsDomService } from '../js-dom/js-dom.service';
 import { DataSaverService } from '../data-saver/data-saver.service';
+import { StartParseDto } from './dto/start-parse.dto';
 
 @Injectable()
 export class PeParserService {
@@ -19,9 +20,12 @@ export class PeParserService {
     return el.replace(/\n/, '').trim();
   }
 
-  async parse(): Promise<{ words: string[]; translations: string[] }> {
+  async parse({
+    startPage,
+    endPage,
+  }: StartParseDto): Promise<{ words: string[]; translations: string[] }> {
     let hasMore = true;
-    let page = 1;
+    let page = startPage || 0;
 
     const words = [];
     const translations = [];
@@ -32,7 +36,7 @@ export class PeParserService {
 
       const wordFromPage = DOM.getText(this.SELECTOR_WORDS).map(this.cleanText);
 
-      if (wordFromPage.length) {
+      if (wordFromPage.length && (endPage ? page <= endPage : true)) {
         page += 1;
       } else {
         hasMore = false;
@@ -50,6 +54,8 @@ export class PeParserService {
 
     this.writer.saveWords(words.join('\n'));
     this.writer.saveTranslation(translations.join('\n'));
+
+    Logger.debug(`Done!`);
 
     return {
       words,
