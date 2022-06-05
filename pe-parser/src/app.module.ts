@@ -5,6 +5,7 @@ import { PeParserModule } from './pe-parser/pe-parser.module';
 import { PeClientModule } from './pe-client/pe-client.module';
 import { JsDomModule } from './js-dom/js-dom.module';
 import { ConfigModule } from '@nestjs/config';
+import { DataSaverModule } from './data-saver/data-saver.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { ConfigModule } from '@nestjs/config';
       isGlobal: true,
       envFilePath: ['.env'],
     }),
+    DataSaverModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { PeClientService } from '../pe-client/pe-client.service';
 import { JsDomService } from '../js-dom/js-dom.service';
+import { DataSaverService } from '../data-saver/data-saver.service';
 
 @Injectable()
 export class PeParserService {
@@ -11,19 +12,45 @@ export class PeParserService {
   constructor(
     private readonly client: PeClientService,
     private readonly parser: JsDomService,
+    private readonly writer: DataSaverService,
   ) {}
 
-  private cleanText(el: string) {
+  private cleanText(el: string): string {
     return el.replace(/\n/, '').trim();
   }
 
   async parse(): Promise<{ words: string[]; translations: string[] }> {
-    const body = await this.client.makeRequest(1);
-    const DOM = this.parser.load(body);
-    const words = DOM.getText(this.SELECTOR_WORDS).map(this.cleanText);
-    const translations = DOM.getText(this.SELECTOR_TRANSLATIONS).map(
-      this.cleanText,
-    );
+    let hasMore = true;
+    let page = 1;
+
+    const words = [];
+    const translations = [];
+
+    while (hasMore) {
+      const body = await this.client.makeRequest(page);
+      const DOM = this.parser.load(body);
+
+      const wordFromPage = DOM.getText(this.SELECTOR_WORDS).map(this.cleanText);
+
+      // if (wordFromPage.length) {
+      if (page < 4) {
+        page += 1;
+      } else {
+        hasMore = false;
+        break;
+      }
+
+      words.push(...wordFromPage);
+
+      translations.push(
+        ...DOM.getText(this.SELECTOR_TRANSLATIONS).map(this.cleanText),
+      );
+
+      Logger.debug(`Already parsed ${words.length} words`);
+    }
+
+    this.writer.saveWords(words.join('\n'));
+    this.writer.saveTranslation(translations.join('\n'));
 
     return {
       words,

@@ -3,15 +3,13 @@ import { JSDOM } from 'jsdom';
 
 @Injectable()
 export class JsDomService {
-  private readonly jsdom: any;
+  // private readonly jsdom: any;
   public dom;
 
-  constructor() {
-    this.jsdom = JSDOM;
-  }
+  constructor() {}
 
   load(html: string): JsDomService {
-    this.dom = new this.jsdom(html);
+    this.dom = new JSDOM(html);
     return this;
   }
 
