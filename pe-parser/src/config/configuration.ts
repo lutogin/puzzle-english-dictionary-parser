@@ -1,4 +1,7 @@
+const { COOKIE, BASE_API_PATH, SELECTOR_WORDS } = process.env;
+
 export default () => ({
-  cookie: process.env.COOKIER,
-  baseApiPath: process.env.BASE_API_PATH,
+  cookie: COOKIE,
+  baseApiPath: BASE_API_PATH,
+  selectorWords: SELECTOR_WORDS,
 });

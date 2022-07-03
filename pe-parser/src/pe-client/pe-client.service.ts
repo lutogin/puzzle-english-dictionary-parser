@@ -1,12 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { map } from 'rxjs';
 import { ConfigService } from '@nestjs/config';
+import { map } from 'rxjs';
 
-enum ApiPath {
-  GetDictionary = 'change-my-dictionary',
-}
+import { AjaxAction, ApiPath } from './enums';
 
 @Injectable()
 export class PeClientService {
@@ -21,7 +19,7 @@ export class PeClientService {
   private getBody(page = 1): string {
     const body = {
       for_dictionary_change: true,
-      ajax_action: 'ajax_pe_get_next_page_dictionary',
+      ajax_action: AjaxAction.GetNextPage,
       page: page,
     };
 

@@ -6,8 +6,6 @@ export class JsDomService {
   // private readonly jsdom: any;
   public dom;
 
-  constructor() {}
-
   load(html: string): JsDomService {
     this.dom = new JSDOM(html);
     return this;

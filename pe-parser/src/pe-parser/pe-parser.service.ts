@@ -3,18 +3,24 @@ import { PeClientService } from '../pe-client/pe-client.service';
 import { JsDomService } from '../js-dom/js-dom.service';
 import { DataSaverService } from '../data-saver/data-saver.service';
 import { StartParseDto } from './dto/start-parse.dto';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class PeParserService {
-  private SELECTOR_WORDS = '.puzzle-card__word .word-wrapper';
-  private SELECTOR_TRANSLATIONS =
-    '.puzzle-card__word .dict__video__list-table__word__translate.puzzle-text_fz_14.puzzle_mt_4';
+  private readonly selectorWords;
+  private readonly selectorTranslations;
 
   constructor(
+    private readonly config: ConfigService,
     private readonly client: PeClientService,
     private readonly parser: JsDomService,
     private readonly writer: DataSaverService,
-  ) {}
+  ) {
+    this.selectorWords = this.config.get<string>('SELECTOR_WORDS');
+    this.selectorTranslations = this.config.get<string>(
+      'SELECTOR_TRANSLATIONS',
+    );
+  }
 
   private cleanText(el: string): string {
     return el.replace(/\n/, '').trim();
@@ -34,7 +40,7 @@ export class PeParserService {
       const body = await this.client.makeRequest(page);
       const DOM = this.parser.load(body);
 
-      const wordFromPage = DOM.getText(this.SELECTOR_WORDS).map(this.cleanText);
+      const wordFromPage = DOM.getText(this.selectorWords).map(this.cleanText);
 
       if (wordFromPage.length && (endPage ? page <= endPage : true)) {
         page += 1;
@@ -46,7 +52,7 @@ export class PeParserService {
       words.push(...wordFromPage);
 
       translations.push(
-        ...DOM.getText(this.SELECTOR_TRANSLATIONS).map(this.cleanText),
+        ...DOM.getText(this.selectorTranslations).map(this.cleanText),
       );
 
       Logger.debug(`Already parsed ${words.length} words`);

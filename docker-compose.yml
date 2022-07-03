@@ -14,5 +14,6 @@ services:
       - "9229:9229"
     volumes:
       - ./pe-parser:/app
+      - ./pe-parser/out:/app/out
       - /app/node_modules
       - /dist

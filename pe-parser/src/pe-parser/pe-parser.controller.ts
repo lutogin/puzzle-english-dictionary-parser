@@ -11,6 +11,7 @@ export class PeParserController {
     @Query(new ValidationPipe({ transform: true }))
     params: StartParseDto,
   ) {
-    return this.peParserCheerioService.parse(params);
+    this.peParserCheerioService.parse(params);
+    return { status: 200 };
   }
 }
